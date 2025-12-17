@@ -1,598 +1,222 @@
-{
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {
-        "id": "view-in-github",
-        "colab_type": "text"
-      },
-      "source": [
-        "<a href=\"https://colab.research.google.com/github/narenderkulariya/st20269341-CMP7005-PRAC1/blob/main/app.py\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": 74,
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "P3efG9vdoeJm",
-        "outputId": "2f2fbe86-b036-41c1-8410-f9632f90100b"
-      },
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Requirement already satisfied: streamlit in /usr/local/lib/python3.12/dist-packages (1.52.2)\n",
-            "Requirement already satisfied: altair!=5.4.0,!=5.4.1,<7,>=4.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (5.5.0)\n",
-            "Requirement already satisfied: blinker<2,>=1.5.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (1.9.0)\n",
-            "Requirement already satisfied: cachetools<7,>=4.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (6.2.2)\n",
-            "Requirement already satisfied: click<9,>=7.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (8.3.1)\n",
-            "Requirement already satisfied: numpy<3,>=1.23 in /usr/local/lib/python3.12/dist-packages (from streamlit) (2.0.2)\n",
-            "Requirement already satisfied: packaging>=20 in /usr/local/lib/python3.12/dist-packages (from streamlit) (25.0)\n",
-            "Requirement already satisfied: pandas<3,>=1.4.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (2.2.2)\n",
-            "Requirement already satisfied: pillow<13,>=7.1.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (11.3.0)\n",
-            "Requirement already satisfied: protobuf<7,>=3.20 in /usr/local/lib/python3.12/dist-packages (from streamlit) (5.29.5)\n",
-            "Requirement already satisfied: pyarrow>=7.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (18.1.0)\n",
-            "Requirement already satisfied: requests<3,>=2.27 in /usr/local/lib/python3.12/dist-packages (from streamlit) (2.32.4)\n",
-            "Requirement already satisfied: tenacity<10,>=8.1.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (9.1.2)\n",
-            "Requirement already satisfied: toml<2,>=0.10.1 in /usr/local/lib/python3.12/dist-packages (from streamlit) (0.10.2)\n",
-            "Requirement already satisfied: typing-extensions<5,>=4.4.0 in /usr/local/lib/python3.12/dist-packages (from streamlit) (4.15.0)\n",
-            "Requirement already satisfied: watchdog<7,>=2.1.5 in /usr/local/lib/python3.12/dist-packages (from streamlit) (6.0.0)\n",
-            "Requirement already satisfied: gitpython!=3.1.19,<4,>=3.0.7 in /usr/local/lib/python3.12/dist-packages (from streamlit) (3.1.45)\n",
-            "Requirement already satisfied: pydeck<1,>=0.8.0b4 in /usr/local/lib/python3.12/dist-packages (from streamlit) (0.9.1)\n",
-            "Requirement already satisfied: tornado!=6.5.0,<7,>=6.0.3 in /usr/local/lib/python3.12/dist-packages (from streamlit) (6.5.1)\n",
-            "Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (3.1.6)\n",
-            "Requirement already satisfied: jsonschema>=3.0 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (4.25.1)\n",
-            "Requirement already satisfied: narwhals>=1.14.2 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (2.13.0)\n",
-            "Requirement already satisfied: gitdb<5,>=4.0.1 in /usr/local/lib/python3.12/dist-packages (from gitpython!=3.1.19,<4,>=3.0.7->streamlit) (4.0.12)\n",
-            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->streamlit) (2.9.0.post0)\n",
-            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->streamlit) (2025.2)\n",
-            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->streamlit) (2025.2)\n",
-            "Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->streamlit) (3.4.4)\n",
-            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->streamlit) (3.11)\n",
-            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->streamlit) (2.5.0)\n",
-            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->streamlit) (2025.11.12)\n",
-            "Requirement already satisfied: smmap<6,>=3.0.1 in /usr/local/lib/python3.12/dist-packages (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->streamlit) (5.0.2)\n",
-            "Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2->altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (3.0.3)\n",
-            "Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (25.4.0)\n",
-            "Requirement already satisfied: jsonschema-specifications>=2023.03.6 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (2025.9.1)\n",
-            "Requirement already satisfied: referencing>=0.28.4 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (0.37.0)\n",
-            "Requirement already satisfied: rpds-py>=0.7.1 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->streamlit) (0.30.0)\n",
-            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas<3,>=1.4.0->streamlit) (1.17.0)\n"
-          ]
-        }
-      ],
-      "source": [
-        "!pip install streamlit"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": 75,
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "O-fc9BQoohqr",
-        "outputId": "53e728e0-6ba1-4ae7-dcc3-23cdea68d646"
-      },
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Requirement already satisfied: Streamlit in /usr/local/lib/python3.12/dist-packages (1.52.2)\n",
-            "Requirement already satisfied: altair!=5.4.0,!=5.4.1,<7,>=4.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (5.5.0)\n",
-            "Requirement already satisfied: blinker<2,>=1.5.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (1.9.0)\n",
-            "Requirement already satisfied: cachetools<7,>=4.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (6.2.2)\n",
-            "Requirement already satisfied: click<9,>=7.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (8.3.1)\n",
-            "Requirement already satisfied: numpy<3,>=1.23 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (2.0.2)\n",
-            "Requirement already satisfied: packaging>=20 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (25.0)\n",
-            "Requirement already satisfied: pandas<3,>=1.4.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (2.2.2)\n",
-            "Requirement already satisfied: pillow<13,>=7.1.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (11.3.0)\n",
-            "Requirement already satisfied: protobuf<7,>=3.20 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (5.29.5)\n",
-            "Requirement already satisfied: pyarrow>=7.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (18.1.0)\n",
-            "Requirement already satisfied: requests<3,>=2.27 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (2.32.4)\n",
-            "Requirement already satisfied: tenacity<10,>=8.1.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (9.1.2)\n",
-            "Requirement already satisfied: toml<2,>=0.10.1 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (0.10.2)\n",
-            "Requirement already satisfied: typing-extensions<5,>=4.4.0 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (4.15.0)\n",
-            "Requirement already satisfied: watchdog<7,>=2.1.5 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (6.0.0)\n",
-            "Requirement already satisfied: gitpython!=3.1.19,<4,>=3.0.7 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (3.1.45)\n",
-            "Requirement already satisfied: pydeck<1,>=0.8.0b4 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (0.9.1)\n",
-            "Requirement already satisfied: tornado!=6.5.0,<7,>=6.0.3 in /usr/local/lib/python3.12/dist-packages (from Streamlit) (6.5.1)\n",
-            "Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (3.1.6)\n",
-            "Requirement already satisfied: jsonschema>=3.0 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (4.25.1)\n",
-            "Requirement already satisfied: narwhals>=1.14.2 in /usr/local/lib/python3.12/dist-packages (from altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (2.13.0)\n",
-            "Requirement already satisfied: gitdb<5,>=4.0.1 in /usr/local/lib/python3.12/dist-packages (from gitpython!=3.1.19,<4,>=3.0.7->Streamlit) (4.0.12)\n",
-            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->Streamlit) (2.9.0.post0)\n",
-            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->Streamlit) (2025.2)\n",
-            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas<3,>=1.4.0->Streamlit) (2025.2)\n",
-            "Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->Streamlit) (3.4.4)\n",
-            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->Streamlit) (3.11)\n",
-            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->Streamlit) (2.5.0)\n",
-            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests<3,>=2.27->Streamlit) (2025.11.12)\n",
-            "Requirement already satisfied: smmap<6,>=3.0.1 in /usr/local/lib/python3.12/dist-packages (from gitdb<5,>=4.0.1->gitpython!=3.1.19,<4,>=3.0.7->Streamlit) (5.0.2)\n",
-            "Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.12/dist-packages (from jinja2->altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (3.0.3)\n",
-            "Requirement already satisfied: attrs>=22.2.0 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (25.4.0)\n",
-            "Requirement already satisfied: jsonschema-specifications>=2023.03.6 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (2025.9.1)\n",
-            "Requirement already satisfied: referencing>=0.28.4 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (0.37.0)\n",
-            "Requirement already satisfied: rpds-py>=0.7.1 in /usr/local/lib/python3.12/dist-packages (from jsonschema>=3.0->altair!=5.4.0,!=5.4.1,<7,>=4.0->Streamlit) (0.30.0)\n",
-            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas<3,>=1.4.0->Streamlit) (1.17.0)\n"
-          ]
-        }
-      ],
-      "source": [
-        "!pip install --upgrade Streamlit"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": 76,
-      "metadata": {
-        "id": "xbe_NirhnBTQ"
-      },
-      "outputs": [],
-      "source": [
-        "import streamlit as st\n",
-        "import pandas as pd\n",
-        "import numpy as np\n",
-        "import plotly.express as px\n",
-        "import seaborn as sns\n",
-        "import matplotlib.pyplot as plt\n",
-        "from sklearn.model_selection import train_test_split\n",
-        "from sklearn.ensemble import RandomForestRegressor\n",
-        "from sklearn.metrics import mean_squared_error, r2_score\n",
-        "import joblib\n",
-        "import os"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": 77,
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "3tPzQLxsuPfo",
-        "outputId": "f2ca6ac0-4583-482b-9914-d702387ee5a1"
-      },
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(\"/content/drive\", force_remount=True).\n"
-          ]
-        }
-      ],
-      "source": [
-        "from google.colab import drive\n",
-        "drive.mount('/content/drive')"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "# streamlit_app.py\n",
-        "\n",
-        "import streamlit as st\n",
-        "import pandas as pd\n",
-        "import numpy as np\n",
-        "import joblib\n",
-        "import os\n",
-        "\n",
-        "from sklearn.ensemble import RandomForestRegressor\n",
-        "from sklearn.model_selection import train_test_split\n",
-        "from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score\n",
-        "\n",
-        "@st.cache_data\n",
-        "def load_data():\n",
-        "    df = pd.read_csv('/content/drive/MyDrive/CMP7005/all_cities_combined_cleaned.csv')\n",
-        "    return df\n",
-        "\n",
-        "df = load_data()\n",
-        "\n",
-        "FEATURE_COLS = [\n",
-        "    \"PM2.5\", \"PM10\", \"NO\", \"NO2\", \"NOx\", \"NH3\",\n",
-        "    \"CO\", \"SO2\", \"O3\", \"Benzene\", \"Toluene\", \"Xylene\"\n",
-        "]\n",
-        "TARGET_COL = \"AQI\"\n",
-        "\n",
-        "@st.cache_resource\n",
-        "def get_model():\n",
-        "\n",
-        "    if os.path.exists(\"model.pkl\"):\n",
-        "        model = joblib.load(\"model.pkl\")\n",
-        "    else:\n",
-        "        # Basic training using same logic as model_prediction.ipynb\n",
-        "        X = df[FEATURE_COLS]\n",
-        "        y = df[TARGET_COL]\n",
-        "\n",
-        "        X_train, X_test, y_train, y_test = train_test_split(\n",
-        "            X, y, test_size=0.2, random_state=42\n",
-        "        )\n",
-        "\n",
-        "        model = RandomForestRegressor(\n",
-        "            n_estimators=200,\n",
-        "            random_state=42\n",
-        "        )\n",
-        "        model.fit(X_train, y_train)\n",
-        "\n",
-        "        joblib.dump(model, \"model.pkl\")\n",
-        "    return model\n",
-        "\n",
-        "model = get_model()\n",
-        "\n",
-        "# -------------------------------------------------------------------\n",
-        "# 3. Sidebar navigation\n",
-        "# -------------------------------------------------------------------\n",
-        "st.sidebar.title(\"Air Quality App\")\n",
-        "page = st.sidebar.radio(\n",
-        "    \"Navigate\",\n",
-        "    (\"Data Overview\", \"Exploratory Data Analysis\", \"Modelling & Prediction\")\n",
-        ")\n",
-        "\n",
-        "st.sidebar.markdown(\"---\")\n",
-        "st.sidebar.write(\"Dataset: all_cities_combined_cleaned.csv\")\n",
-        "st.sidebar.write(f\"Rows: {df.shape[0]} | Columns: {df.shape[1]}\")\n",
-        "\n",
-        "\n",
-        "# -------------------------------------------------------------------\n",
-        "# PAGE 1: Data Overview\n",
-        "# -------------------------------------------------------------------\n",
-        "if page == \"Data Overview\":\n",
-        "    st.title(\"Data Overview\")\n",
-        "\n",
-        "    st.subheader(\"Sample of the Dataset\")\n",
-        "    st.dataframe(df.head())\n",
-        "\n",
-        "    st.subheader(\"Basic Information\")\n",
-        "    st.write(f\"Number of rows: {df.shape[0]}\")\n",
-        "    st.write(f\"Number of columns: {df.shape[1]}\")\n",
-        "\n",
-        "    st.write(\"Columns and data types:\")\n",
-        "    st.write(df.dtypes)\n",
-        "\n",
-        "    st.subheader(\"Summary Statistics (Numeric Columns)\")\n",
-        "    st.write(df.describe())\n",
-        "\n",
-        "    st.subheader(\"Missing Values per Column\")\n",
-        "    missing = df.isna().sum()\n",
-        "    missing_df = pd.DataFrame({\n",
-        "        \"Column\": missing.index,\n",
-        "        \"Missing Values\": missing.values,\n",
-        "        \"Missing %\": (missing.values / len(df)) * 100\n",
-        "    })\n",
-        "    st.dataframe(missing_df)\n",
-        "\n",
-        "    st.bar_chart(missing)\n",
-        "\n",
-        "\n",
-        "# -------------------------------------------------------------------\n",
-        "# PAGE 2: Exploratory Data Analysis\n",
-        "# -------------------------------------------------------------------\n",
-        "elif page == \"Exploratory Data Analysis\":\n",
-        "    st.title(\"Exploratory Data Analysis (EDA)\")\n",
-        "\n",
-        "    # Convert Date to datetime just in case\n",
-        "    if not np.issubdtype(df[\"Date\"].dtype, np.datetime64):\n",
-        "        df[\"Date\"] = pd.to_datetime(df[\"Date\"], errors=\"coerce\")\n",
-        "\n",
-        "    # EDA controls\n",
-        "    st.subheader(\"Filters\")\n",
-        "    cities = df[\"City\"].unique()\n",
-        "    selected_city = st.selectbox(\"Select city for analysis\", np.sort(cities))\n",
-        "\n",
-        "    city_df = df[df[\"City\"] == selected_city].copy()\n",
-        "\n",
-        "    # 1. Time-series AQI\n",
-        "    st.subheader(f\"AQI over Time for {selected_city}\")\n",
-        "    city_ts = city_df[[\"Date\", \"AQI\"]].set_index(\"Date\").sort_index()\n",
-        "    st.line_chart(city_ts)\n",
-        "\n",
-        "    # 2. Year-over-Year average AQI\n",
-        "    st.subheader(\"Yearly Average AQI\")\n",
-        "    if \"Year\" not in city_df.columns:\n",
-        "        city_df[\"Year\"] = city_df[\"Date\"].dt.year\n",
-        "    yearly_aqi = city_df.groupby(\"Year\")[\"AQI\"].mean()\n",
-        "    st.bar_chart(yearly_aqi)\n",
-        "\n",
-        "    # 3. Monthly / seasonal pattern\n",
-        "    st.subheader(\"Monthly Average AQI\")\n",
-        "    if \"month\" not in city_df.columns:\n",
-        "        city_df[\"month\"] = city_df[\"Date\"].dt.month\n",
-        "    monthly_aqi = city_df.groupby(\"month\")[\"AQI\"].mean()\n",
-        "    st.bar_chart(monthly_aqi)\n",
-        "\n",
-        "    # 4. Distribution of pollutants\n",
-        "    st.subheader(\"Pollutant Distributions\")\n",
-        "    pollutant = st.selectbox(\"Select pollutant\", FEATURE_COLS)\n",
-        "    st.write(f\"Histogram of {pollutant}\")\n",
-        "    st.histogram = st.pyplot\n",
-        "    # Simple histogram using matplotlib\n",
-        "    import matplotlib.pyplot as plt\n",
-        "\n",
-        "    fig, ax = plt.subplots()\n",
-        "    city_df[pollutant].dropna().hist(bins=20, edgecolor=\"white\", ax=ax)\n",
-        "    ax.set_xlabel(pollutant)\n",
-        "    ax.set_ylabel(\"Count\")\n",
-        "    st.pyplot(fig)\n",
-        "\n",
-        "    # 5. Top polluted cities (average AQI)\n",
-        "    st.subheader(\"Top 10 Most Polluted Cities (Average AQI)\")\n",
-        "    top_cities = df.groupby(\"City\")[\"AQI\"].mean().sort_values(ascending=False).head(10)\n",
-        "    st.bar_chart(top_cities)\n",
-        "\n",
-        "    st.subheader(\"Cleanest 10 Cities (Average AQI)\")\n",
-        "    clean_cities = df.groupby(\"City\")[\"AQI\"].mean().sort_values(ascending=True).head(10)\n",
-        "    st.bar_chart(clean_cities)\n",
-        "\n",
-        "\n",
-        "# -------------------------------------------------------------------\n",
-        "# PAGE 3: Modelling & Prediction\n",
-        "# -------------------------------------------------------------------\n",
-        "elif page == \"Modelling & Prediction\":\n",
-        "    st.title(\"Modelling & Prediction\")\n",
-        "\n",
-        "    st.markdown(\n",
-        "        \"This section uses a **Random Forest Regressor** trained on pollutant \"\n",
-        "        \"concentrations to predict the Air Quality Index (AQI).\"\n",
-        "    )\n",
-        "\n",
-        "    # Retrain-evaluate button (optional)\n",
-        "    if st.button(\"Evaluate Model on Held-out Data\"):\n",
-        "        X = df[FEATURE_COLS]\n",
-        "        y = df[TARGET_COL]\n",
-        "\n",
-        "        X_train, X_test, y_train, y_test = train_test_split(\n",
-        "            X, y, test_size=0.2, random_state=42\n",
-        "        )\n",
-        "\n",
-        "        model_eval = RandomForestRegressor(\n",
-        "            n_estimators=200,\n",
-        "            random_state=42\n",
-        "        )\n",
-        "        model_eval.fit(X_train, y_train)\n",
-        "        y_pred = model_eval.predict(X_test)\n",
-        "\n",
-        "        mae = mean_absolute_error(y_test, y_pred)\n",
-        "        mse = mean_squared_error(y_test, y_pred)\n",
-        "        rmse = np.sqrt(mse)\n",
-        "        r2 = r2_score(y_test, y_pred)\n",
-        "\n",
-        "        st.subheader(\"Evaluation Metrics (Random 20% Test Set)\")\n",
-        "        st.write(f\"MAE:  {mae:.3f}\")\n",
-        "        st.write(f\"MSE:  {mse:.3f}\")\n",
-        "        st.write(f\"RMSE: {rmse:.3f}\")\n",
-        "        st.write(f\"R²:   {r2:.3f}\")\n",
-        "\n",
-        "    st.markdown(\"---\")\n",
-        "    st.subheader(\"Predict AQI from Pollutant Values\")\n",
-        "\n",
-        "    # Default values from dataset medians\n",
-        "    defaults = df[FEATURE_COLS].median()\n",
-        "\n",
-        "    col1, col2 = st.columns(2)\n",
-        "\n",
-        "    with col1:\n",
-        "        pm25 = st.number_input(\"PM2.5\", value=float(defaults[\"PM2.5\"]))\n",
-        "        pm10 = st.number_input(\"PM10\", value=float(defaults[\"PM10\"]))\n",
-        "        no = st.number_input(\"NO\", value=float(defaults[\"NO\"]))\n",
-        "        no2 = st.number_input(\"NO2\", value=float(defaults[\"NO2\"]))\n",
-        "        nox = st.number_input(\"NOx\", value=float(defaults[\"NOx\"]))\n",
-        "        nh3 = st.number_input(\"NH3\", value=float(defaults[\"NH3\"]))\n",
-        "\n",
-        "    with col2:\n",
-        "        co = st.number_input(\"CO\", value=float(defaults[\"CO\"]))\n",
-        "        so2 = st.number_input(\"SO2\", value=float(defaults[\"SO2\"]))\n",
-        "        o3 = st.number_input(\"O3\", value=float(defaults[\"O3\"]))\n",
-        "        benzene = st.number_input(\"Benzene\", value=float(defaults[\"Benzene\"]))\n",
-        "        toluene = st.number_input(\"Toluene\", value=float(defaults[\"Toluene\"]))\n",
-        "        xylene = st.number_input(\"Xylene\", value=float(defaults[\"Xylene\"]))\n",
-        "\n",
-        "    if st.button(\"Predict AQI\"):\n",
-        "        input_array = np.array([[pm25, pm10, no, no2, nox, nh3,\n",
-        "                                 co, so2, o3, benzene, toluene, xylene]])\n",
-        "        predicted_aqi = model.predict(input_array)[0]\n",
-        "\n",
-        "        st.success(f\"Predicted AQI: {predicted_aqi:.2f}\")\n",
-        "\n",
-        "        # Optional simple AQI category\n",
-        "        if predicted_aqi <= 50:\n",
-        "            bucket = \"Good\"\n",
-        "        elif predicted_aqi <= 100:\n",
-        "            bucket = \"Satisfactory\"\n",
-        "        elif predicted_aqi <= 200:\n",
-        "            bucket = \"Moderate\"\n",
-        "        elif predicted_aqi <= 300:\n",
-        "            bucket = \"Poor\"\n",
-        "        elif predicted_aqi <= 400:\n",
-        "            bucket = \"Very Poor\"\n",
-        "        else:\n",
-        "            bucket = \"Severe\"\n",
-        "\n",
-        "        st.write(f\"Estimated AQI Category: **{bucket}**\")\n"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "IAa5s3UBgqHI",
-        "outputId": "9b3dd7af-1df3-4994-8fe8-b9c5f47453f2"
-      },
-      "execution_count": 79,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stderr",
-          "text": [
-            "2025-12-17 22:56:34.955 No runtime found, using MemoryCacheStorageManager\n",
-            "2025-12-17 22:56:34.984 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:34.990 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:34.996 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:35.001 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:35.507 Thread 'Thread-16': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:35.512 Thread 'Thread-16': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:35.516 Thread 'Thread-16': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.759 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.760 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.761 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.762 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.763 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.764 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.765 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.766 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.766 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.768 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.768 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.769 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.770 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.775 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.782 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.784 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.789 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.790 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.792 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.796 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.798 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.800 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.813 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.819 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.820 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.822 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.827 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.830 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.842 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.846 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.847 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.849 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.854 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.857 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.859 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.862 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.865 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.869 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.870 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.873 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.877 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.879 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.883 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.889 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.\n",
-            "Traceback (most recent call last):\n",
-            "  File \"/usr/local/lib/python3.12/dist-packages/streamlit/dataframe_util.py\", line 829, in convert_pandas_df_to_arrow_bytes\n",
-            "    table = pa.Table.from_pandas(df)\n",
-            "            ^^^^^^^^^^^^^^^^^^^^^^^^\n",
-            "  File \"pyarrow/table.pxi\", line 4751, in pyarrow.lib.Table.from_pandas\n",
-            "  File \"/usr/local/lib/python3.12/dist-packages/pyarrow/pandas_compat.py\", line 625, in dataframe_to_arrays\n",
-            "    arrays = [convert_column(c, f)\n",
-            "              ^^^^^^^^^^^^^^^^^^^^\n",
-            "  File \"/usr/local/lib/python3.12/dist-packages/pyarrow/pandas_compat.py\", line 612, in convert_column\n",
-            "    raise e\n",
-            "  File \"/usr/local/lib/python3.12/dist-packages/pyarrow/pandas_compat.py\", line 606, in convert_column\n",
-            "    result = pa.array(col, type=type_, from_pandas=True, safe=safe)\n",
-            "             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n",
-            "  File \"pyarrow/array.pxi\", line 360, in pyarrow.lib.array\n",
-            "  File \"pyarrow/array.pxi\", line 87, in pyarrow.lib._ndarray_to_array\n",
-            "  File \"pyarrow/error.pxi\", line 92, in pyarrow.lib.check_status\n",
-            "pyarrow.lib.ArrowInvalid: (\"Could not convert dtype('O') with type numpy.dtypes.ObjectDType: did not recognize Python value type when inferring an Arrow data type\", 'Conversion failed for column 0 with type object')\n",
-            "2025-12-17 22:56:36.902 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.906 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.909 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.912 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.915 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:36.918 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.106 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.107 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.112 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.116 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.117 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.122 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.145 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.146 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.147 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.172 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.173 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-            "2025-12-17 22:56:37.174 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
-          ]
-        }
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": 72,
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "IrsVJ7-xos4N",
-        "outputId": "b58383ef-c365-463f-9a38-ccae2383b7f7"
-      },
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "34.75.230.72\n"
-          ]
-        }
-      ],
-      "source": [
-        "!wget -q -O - ipv4.icanhazip.com"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "source": [
-        "!streamlit run app.py & npx localtunnel --port 8501"
-      ],
-      "metadata": {
-        "colab": {
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "UE5VT83_X3nl",
-        "outputId": "956d0f69-61d8-4f81-fabd-ed91485d9eac"
-      },
-      "execution_count": 73,
-      "outputs": [
-        {
-          "output_type": "stream",
-          "name": "stdout",
-          "text": [
-            "\u001b[1G\u001b[0K⠙\u001b[1G\u001b[0K⠹\u001b[1G\u001b[0K⠸\n",
-            "Collecting usage statistics. To deactivate, set browser.gatherUsageStats to false.\n",
-            "\u001b[0m\n",
-            "\u001b[1G\u001b[0K⠼\u001b[1G\u001b[0K⠴\u001b[1G\u001b[0K⠦\u001b[1G\u001b[0K⠧\u001b[1G\u001b[0K⠇\u001b[1G\u001b[0K⠏\u001b[1G\u001b[0K⠋\u001b[1G\u001b[0K⠙\u001b[1G\u001b[0K⠹\u001b[1G\u001b[0K⠸\u001b[1G\u001b[0K⠼\u001b[1G\u001b[0K⠴\u001b[1G\u001b[0K⠦\u001b[1G\u001b[0K⠧\u001b[1G\u001b[0K⠇\u001b[1G\u001b[0K⠏\u001b[1G\u001b[0K⠋\u001b[1G\u001b[0K⠙\u001b[1G\u001b[0K⠹\u001b[1G\u001b[0Kyour url is: https://evil-walls-exist.loca.lt\n",
-            "\u001b[0m\n",
-            "\u001b[34m\u001b[1m  You can now view your Streamlit app in your browser.\u001b[0m\n",
-            "\u001b[0m\n",
-            "\u001b[34m  Local URL: \u001b[0m\u001b[1mhttp://localhost:8501\u001b[0m\n",
-            "\u001b[34m  Network URL: \u001b[0m\u001b[1mhttp://172.28.0.12:8501\u001b[0m\n",
-            "\u001b[34m  External URL: \u001b[0m\u001b[1mhttp://34.75.230.72:8501\u001b[0m\n",
-            "\u001b[0m\n",
-            "\u001b[34m  Stopping...\u001b[0m\n",
-            "^C\n"
-          ]
-        }
-      ]
-    }
-  ],
-  "metadata": {
-    "colab": {
-      "provenance": [],
-      "mount_file_id": "1ZKd2WZ0OJVNYfZo4xuokkWTAz-norL6r",
-      "authorship_tag": "ABX9TyNUQk9IRDBeH33Knwr0JiZ/",
-    },
-    "kernelspec": {
-      "display_name": "Python 3",
-      "name": "python3"
-    },
-    "language_info": {
-      "name": "python"
-    }
-  },
-  "nbformat": 4,
-  "nbformat_minor": 0
-}
+%%writefile app.py
+import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import joblib
+import os
+
+# ===================== DATA LOADING ===================== #
+@st.cache_data
+def load_data():
+    df = pd.read_csv("all_cities_combined_cleaned.csv")
+
+    # Fix Date column
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    df["Date"] = df["Date"].dt.date
+    df["Date"] = pd.to_datetime(df["Date"])
+
+    # Ensure non-date object columns are strings
+    for c in df.columns:
+        if df[c].dtype == "object" and c != "Date":
+            df[c] = df[c].astype(str)
+
+    return df
+
+df = load_data()
+
+FEATURE_COLS = [
+    "PM2.5", "PM10", "NO", "NO2", "NOx", "NH3",
+    "CO", "SO2", "O3", "Benzene", "Toluene", "Xylene"
+]
+TARGET_COL = "AQI"
+
+# ===================== MODEL LOADING/TRAINING ===================== #
+@st.cache_resource
+def load_or_train_model():
+    if os.path.exists("model.pkl"):
+        return joblib.load("model.pkl")
+
+    X = df[FEATURE_COLS]
+    y = df[TARGET_COL]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    model = RandomForestRegressor(
+        n_estimators=200,
+        random_state=42,
+        n_jobs=-1
+    )
+    model.fit(X_train, y_train)
+    joblib.dump(model, "model.pkl")
+    return model
+
+model = load_or_train_model()
+
+# ===================== STREAMLIT LAYOUT ===================== #
+st.set_page_config(page_title="Air Quality Dashboard",
+                   layout="wide")
+
+st.sidebar.title("Navigation")
+page = st.sidebar.radio(
+    "Go to",
+    ["Data Overview", "EDA", "Modelling & Prediction"]
+)
+
+# --------- PAGE 1: DATA OVERVIEW --------- #
+if page == "Data Overview":
+    st.title("🏭 Air Quality Data Overview")
+
+    total_cities = df["City"].nunique()
+    total_rows = len(df)
+    min_year = int(df["Year"].min())
+    max_year = int(df["Year"].max())
+    avg_aqi = int(df["AQI"].mean())
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Cities", total_cities)
+    c2.metric("Records", f"{total_rows:,}")
+    c3.metric("Years", f"{min_year} - {max_year}")
+    c4.metric("Average AQI", avg_aqi)
+
+    st.subheader("Raw Data Sample")
+    st.dataframe(df.head(50))
+
+    st.subheader("Basic Statistics")
+    st.write(df.describe())
+
+    st.subheader("Missing Values per Column")
+    miss = df.isna().sum()
+    miss_df = pd.DataFrame({
+        "Column": miss.index,
+        "Missing": miss.values,
+        "Missing %": (miss.values / len(df)) * 100
+    })
+    st.dataframe(miss_df)
+    st.bar_chart(miss)
+
+# --------- PAGE 2: EDA --------- #
+elif page == "EDA":
+    st.title("🔍 Exploratory Data Analysis")
+
+    # City filter
+    cities = sorted(df["City"].unique())
+    city = st.selectbox("Select city", cities)
+
+    city_df = df[df["City"] == city].copy()
+
+    # AQI over time for selected city
+    st.subheader(f"AQI over Time – {city}")
+    ts = city_df[["Date", "AQI"]].set_index("Date").sort_index()
+    st.line_chart(ts)
+
+    # Yearly average AQI for whole dataset
+    st.subheader("Yearly Average AQI (All Cities)")
+    yearly = df.groupby("Year")["AQI"].mean().sort_index()
+    st.bar_chart(yearly)
+
+    # Monthly pattern (all cities)
+    st.subheader("Monthly Average AQI (All Cities)")
+    monthly = df.groupby("month")["AQI"].mean().sort_index()
+    st.bar_chart(monthly)
+
+    # Top 10 polluted and cleanest cities
+    st.subheader("Top 10 Most Polluted Cities (Avg AQI)")
+    top10 = df.groupby("City")["AQI"].mean().sort_values(ascending=False).head(10)
+    st.bar_chart(top10)
+
+    st.subheader("10 Cleanest Cities (Avg AQI)")
+    clean10 = df.groupby("City")["AQI"].mean().sort_values(ascending=True).head(10)
+    st.bar_chart(clean10)
+
+    # Pollutant distribution for selected city
+    st.subheader(f"Pollutant Distribution in {city}")
+    pollutant = st.selectbox("Select pollutant", FEATURE_COLS)
+
+    fig, ax = plt.subplots()
+    city_df[pollutant].dropna().hist(bins=30, edgecolor="white", ax=ax)
+    ax.set_xlabel(pollutant)
+    ax.set_ylabel("Count")
+    st.pyplot(fig)
+
+# --------- PAGE 3: MODELLING & PREDICTION --------- #
+else:
+    st.title("🤖 Modelling & Prediction")
+
+    st.markdown(
+        "A **Random Forest Regressor** is trained on pollutant features "
+        "to predict the Air Quality Index (AQI)."
+    )
+
+    # Evaluate button
+    if st.button("Evaluate model on 20% test split"):
+        X = df[FEATURE_COLS]
+        y = df[TARGET_COL]
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42
+        )
+        eval_model = RandomForestRegressor(
+            n_estimators=200,
+            random_state=42,
+            n_jobs=-1
+        )
+        eval_model.fit(X_train, y_train)
+        y_pred = eval_model.predict(X_test)
+
+        mae = mean_absolute_error(y_test, y_pred)
+        mse = mean_squared_error(y_test, y_pred)
+        rmse = np.sqrt(mse)
+        r2 = r2_score(y_test, y_pred)
+
+        st.subheader("Evaluation Metrics")
+        st.write(f"MAE:  {mae:.2f}")
+        st.write(f"MSE:  {mse:.2f}")
+        st.write(f"RMSE: {rmse:.2f}")
+        st.write(f"R²:   {r2:.3f}")
+
+    st.markdown("---")
+    st.subheader("Manual AQI Prediction")
+
+    defaults = df[FEATURE_COLS].median()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        pm25 = st.number_input("PM2.5", value=float(defaults["PM2.5"]))
+        pm10 = st.number_input("PM10", value=float(defaults["PM10"]))
+        no = st.number_input("NO", value=float(defaults["NO"]))
+        no2 = st.number_input("NO2", value=float(defaults["NO2"]))
+        nox = st.number_input("NOx", value=float(defaults["NOx"]))
+        nh3 = st.number_input("NH3", value=float(defaults["NH3"]))
+    with col2:
+        co = st.number_input("CO", value=float(defaults["CO"]))
+        so2 = st.number_input("SO2", value=float(defaults["SO2"]))
+        o3 = st.number_input("O3", value=float(defaults["O3"]))
+        benzene = st.number_input("Benzene", value=float(defaults["Benzene"]))
+        toluene = st.number_input("Toluene", value=float(defaults["Toluene"]))
+        xylene = st.number_input("Xylene", value=float(defaults["Xylene"]))
+
+    if st.button("Predict AQI"):
+        arr = np.array([[pm25, pm10, no, no2, nox, nh3,
+                         co, so2, o3, benzene, toluene, xylene]])
+        pred = model.predict(arr)[0]
+        st.success(f"Predicted AQI: {pred:.2f}")
+
+        # Simple AQI bucket
+        if pred <= 50:
+            bucket = "Good"
+        elif pred <= 100:
+            bucket = "Satisfactory"
+        elif pred <= 200:
+            bucket = "Moderate"
+        elif pred <= 300:
+            bucket = "Poor"
+        elif pred <= 400:
+            bucket = "Very Poor"
+        else:
+            bucket = "Severe"
+        st.write(f"Estimated AQI Category: **{bucket}**")

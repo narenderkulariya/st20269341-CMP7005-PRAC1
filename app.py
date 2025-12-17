@@ -584,7 +584,6 @@
       "provenance": [],
       "mount_file_id": "1ZKd2WZ0OJVNYfZo4xuokkWTAz-norL6r",
       "authorship_tag": "ABX9TyNUQk9IRDBeH33Knwr0JiZ/",
-      "include_colab_link": true
     },
     "kernelspec": {
       "display_name": "Python 3",

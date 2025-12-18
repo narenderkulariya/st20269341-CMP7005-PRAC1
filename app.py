@@ -217,7 +217,7 @@ elif page == "Regions & Map":
  )
 
     # ----- Part 1: Regional AQI comparison ----- #
-        st.subheader("Regional AQI comparison")
+         st.subheader("Regional AQI comparison")
 
         region_aqi = (
             filtered

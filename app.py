@@ -65,7 +65,7 @@ st.set_page_config(page_title="Air Quality Dashboard",
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
-    ["Data Overview", "Regions & Map", "EDA", "Modelling & Prediction"]
+    ["Data Overview", "Regions & Map", "EDA", "City Report Card", "Modelling & Prediction"]
 )
 
 # --------- PAGE 1: DATA OVERVIEW --------- #
@@ -99,51 +99,6 @@ if page == "Data Overview":
     })
     st.dataframe(miss_df)
     st.bar_chart(miss)
-
-# --------- PAGE 2: EDA --------- #
-elif page == "EDA":
-    st.title("🔍 Exploratory Data Analysis")
-
-    # City filter
-    cities = sorted(df["City"].unique())
-    city = st.selectbox("Select city", cities)
-
-    city_df = df[df["City"] == city].copy()
-
-    # AQI over time for selected city
-    st.subheader(f"AQI over Time – {city}")
-    ts = city_df[["Date", "AQI"]].set_index("Date").sort_index()
-    st.line_chart(ts)
-
-    # Yearly average AQI for whole dataset
-    st.subheader("Yearly Average AQI (All Cities)")
-    yearly = df.groupby("Year")["AQI"].mean().sort_index()
-    st.bar_chart(yearly)
-
-    # Monthly pattern (all cities)
-    st.subheader("Monthly Average AQI (All Cities)")
-    monthly = df.groupby("month")["AQI"].mean().sort_index()
-    st.bar_chart(monthly)
-
-    # Top 10 polluted and cleanest cities
-    st.subheader("Top 10 Most Polluted Cities (Avg AQI)")
-    top10 = df.groupby("City")["AQI"].mean().sort_values(ascending=False).head(10)
-    st.bar_chart(top10)
-
-    st.subheader("10 Cleanest Cities (Avg AQI)")
-    clean10 = df.groupby("City")["AQI"].mean().sort_values(ascending=True).head(10)
-    st.bar_chart(clean10)
-
-    # Pollutant distribution for selected city
-    st.subheader(f"Pollutant Distribution in {city}")
-    pollutant = st.selectbox("Select pollutant", FEATURE_COLS)
-
-    fig, ax = plt.subplots()
-    city_df[pollutant].dropna().hist(bins=30, edgecolor="white", ax=ax)
-    ax.set_xlabel(pollutant)
-    ax.set_ylabel("Count")
-    st.pyplot(fig)
-
 # ---------- NEW: REGION MAP SUPPORT ---------- #
 
 region_map = {
@@ -272,7 +227,52 @@ elif page == "🌍 Regions & Map":
                 "You can pan/zoom to explore the geography."
             )
 
-# ============== PAGE 3: CITY REPORT CARD ============== #
+# --------- PAGE 3: EDA --------- #
+elif page == "EDA":
+    st.title("🔍 Exploratory Data Analysis")
+
+    # City filter
+    cities = sorted(df["City"].unique())
+    city = st.selectbox("Select city", cities)
+
+    city_df = df[df["City"] == city].copy()
+
+    # AQI over time for selected city
+    st.subheader(f"AQI over Time – {city}")
+    ts = city_df[["Date", "AQI"]].set_index("Date").sort_index()
+    st.line_chart(ts)
+
+    # Yearly average AQI for whole dataset
+    st.subheader("Yearly Average AQI (All Cities)")
+    yearly = df.groupby("Year")["AQI"].mean().sort_index()
+    st.bar_chart(yearly)
+
+    # Monthly pattern (all cities)
+    st.subheader("Monthly Average AQI (All Cities)")
+    monthly = df.groupby("month")["AQI"].mean().sort_index()
+    st.bar_chart(monthly)
+
+    # Top 10 polluted and cleanest cities
+    st.subheader("Top 10 Most Polluted Cities (Avg AQI)")
+    top10 = df.groupby("City")["AQI"].mean().sort_values(ascending=False).head(10)
+    st.bar_chart(top10)
+
+    st.subheader("10 Cleanest Cities (Avg AQI)")
+    clean10 = df.groupby("City")["AQI"].mean().sort_values(ascending=True).head(10)
+    st.bar_chart(clean10)
+
+    # Pollutant distribution for selected city
+    st.subheader(f"Pollutant Distribution in {city}")
+    pollutant = st.selectbox("Select pollutant", FEATURE_COLS)
+
+    fig, ax = plt.subplots()
+    city_df[pollutant].dropna().hist(bins=30, edgecolor="white", ax=ax)
+    ax.set_xlabel(pollutant)
+    ax.set_ylabel("Count")
+    st.pyplot(fig)
+
+
+# ============== PAGE 4: CITY REPORT CARD ============== #
 elif mode == "📘 City Report Card":
     st.title("📘 City Report Card")
 
@@ -338,7 +338,7 @@ elif mode == "📘 City Report Card":
             day_card(worst_row, "Dirtiest day", "🏭")
 
 
-# --------- PAGE 4: MODELLING & PREDICTION --------- #
+# --------- PAGE 5: MODELLING & PREDICTION --------- #
 else:
     st.title("🤖 Modelling & Prediction")
 

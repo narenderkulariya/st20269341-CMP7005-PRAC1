@@ -65,42 +65,9 @@ st.set_page_config(page_title="Air Quality Dashboard",
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
-    ["Data Overview", "Regions & Map", "EDA", "City Report Card", "Modelling & Prediction"]
+    ["Data Overview", "EDA", "Regions & Map", "City Report Card", "Modelling & Prediction"]
 )
-
-# --------- PAGE 1: DATA OVERVIEW --------- #
-if page == "Data Overview":
-    st.title("🏭 Air Quality Data Overview")
-
-    total_cities = df["City"].nunique()
-    total_rows = len(df)
-    min_year = int(df["Year"].min())
-    max_year = int(df["Year"].max())
-    avg_aqi = int(df["AQI"].mean())
-
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Cities", total_cities)
-    c2.metric("Records", f"{total_rows:,}")
-    c3.metric("Years", f"{min_year} - {max_year}")
-    c4.metric("Average AQI", avg_aqi)
-
-    st.subheader("Raw Data Sample")
-    st.dataframe(df.head(50))
-
-    st.subheader("Basic Statistics")
-    st.write(df.describe())
-
-    st.subheader("Missing Values per Column")
-    miss = df.isna().sum()
-    miss_df = pd.DataFrame({
-        "Column": miss.index,
-        "Missing": miss.values,
-        "Missing %": (miss.values / len(df)) * 100
-    })
-    st.dataframe(miss_df)
-    st.bar_chart(miss)
 # ---------- NEW: REGION MAP SUPPORT ---------- #
-
 region_map = {
     "Delhi": "North",
     "Jaipur": "North",
@@ -160,8 +127,85 @@ CITY_COORDS = {
     "Thiruvananthapuram": (8.5241, 76.9366),
     "Visakhapatnam": (17.6868, 83.2185)
 }
+
+# --------- PAGE 1: DATA OVERVIEW --------- #
+if page == "Data Overview":
+    st.title("🏭 Air Quality Data Overview")
+
+    total_cities = df["City"].nunique()
+    total_rows = len(df)
+    min_year = int(df["Year"].min())
+    max_year = int(df["Year"].max())
+    avg_aqi = int(df["AQI"].mean())
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Cities", total_cities)
+    c2.metric("Records", f"{total_rows:,}")
+    c3.metric("Years", f"{min_year} - {max_year}")
+    c4.metric("Average AQI", avg_aqi)
+
+    st.subheader("Raw Data Sample")
+    st.dataframe(df.head(50))
+
+    st.subheader("Basic Statistics")
+    st.write(df.describe())
+
+    st.subheader("Missing Values per Column")
+    miss = df.isna().sum()
+    miss_df = pd.DataFrame({
+        "Column": miss.index,
+        "Missing": miss.values,
+        "Missing %": (miss.values / len(df)) * 100
+    })
+    st.dataframe(miss_df)
+    st.bar_chart(miss)
+
+# --------- PAGE 2 : EDA --------- #
+elif page == "EDA":
+    st.title("🔍 Exploratory Data Analysis")
+
+    # City filter
+    cities = sorted(df["City"].unique())
+    city = st.selectbox("Select city", cities)
+
+    city_df = df[df["City"] == city].copy()
+
+    # AQI over time for selected city
+    st.subheader(f"AQI over Time – {city}")
+    ts = city_df[["Date", "AQI"]].set_index("Date").sort_index()
+    st.line_chart(ts)
+
+    # Yearly average AQI for whole dataset
+    st.subheader("Yearly Average AQI (All Cities)")
+    yearly = df.groupby("Year")["AQI"].mean().sort_index()
+    st.bar_chart(yearly)
+
+    # Monthly pattern (all cities)
+    st.subheader("Monthly Average AQI (All Cities)")
+    monthly = df.groupby("month")["AQI"].mean().sort_index()
+    st.bar_chart(monthly)
+
+    # Top 10 polluted and cleanest cities
+    st.subheader("Top 10 Most Polluted Cities (Avg AQI)")
+    top10 = df.groupby("City")["AQI"].mean().sort_values(ascending=False).head(10)
+    st.bar_chart(top10)
+
+    st.subheader("10 Cleanest Cities (Avg AQI)")
+    clean10 = df.groupby("City")["AQI"].mean().sort_values(ascending=True).head(10)
+    st.bar_chart(clean10)
+
+    # Pollutant distribution for selected city
+    st.subheader(f"Pollutant Distribution in {city}")
+    pollutant = st.selectbox("Select pollutant", FEATURE_COLS)
+
+    fig, ax = plt.subplots()
+    city_df[pollutant].dropna().hist(bins=30, edgecolor="white", ax=ax)
+    ax.set_xlabel(pollutant)
+    ax.set_ylabel("Count")
+    st.pyplot(fig)
+
 # ============== NEW PAGE 3: REGIONS & MAP ============== #
-elif page == "🌍 Regions & Map":
+elif page == "Regions & Map":
      st.title("🌍 Regional Comparison & City Map")
 
     if filtered.empty:
@@ -227,53 +271,8 @@ elif page == "🌍 Regions & Map":
                 "You can pan/zoom to explore the geography."
             )
 
-# --------- PAGE 3: EDA --------- #
-elif page == "EDA":
-    st.title("🔍 Exploratory Data Analysis")
-
-    # City filter
-    cities = sorted(df["City"].unique())
-    city = st.selectbox("Select city", cities)
-
-    city_df = df[df["City"] == city].copy()
-
-    # AQI over time for selected city
-    st.subheader(f"AQI over Time – {city}")
-    ts = city_df[["Date", "AQI"]].set_index("Date").sort_index()
-    st.line_chart(ts)
-
-    # Yearly average AQI for whole dataset
-    st.subheader("Yearly Average AQI (All Cities)")
-    yearly = df.groupby("Year")["AQI"].mean().sort_index()
-    st.bar_chart(yearly)
-
-    # Monthly pattern (all cities)
-    st.subheader("Monthly Average AQI (All Cities)")
-    monthly = df.groupby("month")["AQI"].mean().sort_index()
-    st.bar_chart(monthly)
-
-    # Top 10 polluted and cleanest cities
-    st.subheader("Top 10 Most Polluted Cities (Avg AQI)")
-    top10 = df.groupby("City")["AQI"].mean().sort_values(ascending=False).head(10)
-    st.bar_chart(top10)
-
-    st.subheader("10 Cleanest Cities (Avg AQI)")
-    clean10 = df.groupby("City")["AQI"].mean().sort_values(ascending=True).head(10)
-    st.bar_chart(clean10)
-
-    # Pollutant distribution for selected city
-    st.subheader(f"Pollutant Distribution in {city}")
-    pollutant = st.selectbox("Select pollutant", FEATURE_COLS)
-
-    fig, ax = plt.subplots()
-    city_df[pollutant].dropna().hist(bins=30, edgecolor="white", ax=ax)
-    ax.set_xlabel(pollutant)
-    ax.set_ylabel("Count")
-    st.pyplot(fig)
-
-
 # ============== PAGE 4: CITY REPORT CARD ============== #
-elif mode == "📘 City Report Card":
+elif page == "City Report Card":
     st.title("📘 City Report Card")
 
     if filtered.empty:
@@ -339,7 +338,7 @@ elif mode == "📘 City Report Card":
 
 
 # --------- PAGE 5: MODELLING & PREDICTION --------- #
-else:
+elif page == "Modelling & Prediction":
     st.title("🤖 Modelling & Prediction")
 
     st.markdown(

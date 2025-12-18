@@ -65,7 +65,7 @@ st.set_page_config(page_title="Air Quality Dashboard",
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
-    ["Data Overview", "EDA", "Modelling & Prediction"]
+    ["Data Overview", "Regions & Map", "EDA", "Modelling & Prediction"]
 )
 
 # --------- PAGE 1: DATA OVERVIEW --------- #
@@ -207,16 +207,16 @@ CITY_COORDS = {
 }
                       
 # ============== NEW PAGE 3: REGIONS & MAP ============== #
-elif mode == "🌍 Regions & Map":
+elif page == "🌍 Regions & Map":
      st.title("🌍 Regional Comparison & City Map")
 
-      filtered.empty:
-        st.warning("No data for the current filters. Please select more cities or years.")
+    if filtered.empty:
+      st.warning("No data for the current filters. Please select more cities or years.")
     else:
-        st.markdown(
+       st.markdown(
             "This page compares **North vs South (and other regions)** and "
             "shows where the monitoring cities are located on the world map."
-        )
+ )
 
         # ----- Part 1: Regional AQI comparison ----- #
         st.subheader("Regional AQI comparison")

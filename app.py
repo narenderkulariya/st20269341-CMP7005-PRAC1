@@ -205,7 +205,6 @@ CITY_COORDS = {
     "Thiruvananthapuram": (8.5241, 76.9366),
     "Visakhapatnam": (17.6868, 83.2185)
 }
-                      
 # ============== NEW PAGE 3: REGIONS & MAP ============== #
 elif page == "🌍 Regions & Map":
      st.title("🌍 Regional Comparison & City Map")
@@ -218,7 +217,7 @@ elif page == "🌍 Regions & Map":
             "shows where the monitoring cities are located on the world map."
  )
 
-        # ----- Part 1: Regional AQI comparison ----- #
+    # ----- Part 1: Regional AQI comparison ----- #
         st.subheader("Regional AQI comparison")
 
         region_aqi = (

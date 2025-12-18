@@ -207,7 +207,7 @@ CITY_COORDS = {
 }
                       
 # ============== NEW PAGE 3: REGIONS & MAP ============== #
-elif mode == "🌍 Regions & Map":
+ elif mode == "🌍 Regions & Map":
     st.title("🌍 Regional Comparison & City Map")
 
     if filtered.empty:

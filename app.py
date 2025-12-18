@@ -207,9 +207,10 @@ elif page == "EDA":
 # ============== NEW PAGE 3: REGIONS & MAP ============== #
 elif page == "Regions & Map":
      st.title("🌍 Regional Comparison & City Map")
- if filtered.empty:
+    
+     if filtered.empty:
       st.warning("No data for the current filters. Please select more cities or years.")
-    else:
+     else:
        st.markdown(
             "This page compares **North vs South (and other regions)** and "
             "shows where the monitoring cities are located on the world map."
